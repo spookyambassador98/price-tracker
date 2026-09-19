@@ -1,0 +1,34 @@
+name: Hourly price check
+
+on:
+  schedule:
+    # Every hour at :00 UTC (GitHub may start a few minutes late on free tier).
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: hourly-scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Trigger scrape cycle on production
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${APP_URL:-}" ] || [ -z "${CRON_SECRET:-}" ]; then
+            echo "Set repository secrets APP_URL and CRON_SECRET."
+            exit 1
+          fi
+          echo "Pinging ${APP_URL}/api/scrape/run-now"
+          curl -fsS --max-time 300 -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            "${APP_URL%/}/api/scrape/run-now"
+          echo
+          echo "Scrape cycle triggered successfully."
