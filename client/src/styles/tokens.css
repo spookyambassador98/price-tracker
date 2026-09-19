@@ -1,0 +1,67 @@
+/*
+  Design system: "Ценовой радар" — a trading-floor read on a price tracker.
+  Near-monochrome stage, one signal color for a drop (good) and one for a
+  rise (bad), an editorial grid with numbered sections and hairline rules.
+*/
+:root {
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-accent: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-liquid: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --space-3xs: clamp(0.25rem, 0.2rem + 0.2vw, 0.375rem);
+  --space-2xs: clamp(0.5rem, 0.45rem + 0.3vw, 0.75rem);
+  --space-xs: clamp(0.75rem, 0.65rem + 0.4vw, 1rem);
+  --space-sm: clamp(1rem, 0.9rem + 0.6vw, 1.5rem);
+  --space-md: clamp(1.5rem, 1.3rem + 1vw, 2.5rem);
+  --space-lg: clamp(2.5rem, 2rem + 2vw, 4.5rem);
+  --space-xl: clamp(4rem, 3rem + 4vw, 8rem);
+
+  --radius-sm: 6px;
+  --radius-md: 14px;
+
+  color-scheme: dark;
+  --bg: #0b0b0c;
+  --bg-raised: #141416;
+  --fg: #f2f0ea;
+  --fg-muted: #8f8d88;
+  --hairline: rgba(242, 240, 234, 0.14);
+  --signal-drop: #c8ff4d;
+  --signal-drop-dim: rgba(200, 255, 77, 0.14);
+  --signal-rise: #ff5a4e;
+  --signal-rise-dim: rgba(255, 90, 78, 0.14);
+  --focus-ring: #f2f0ea;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5f4ef;
+  --bg-raised: #ffffff;
+  --fg: #101012;
+  --fg-muted: #63615c;
+  --hairline: rgba(16, 16, 18, 0.12);
+  --signal-drop: #4d8f00;
+  --signal-drop-dim: rgba(77, 143, 0, 0.1);
+  --signal-rise: #c23b2e;
+  --signal-rise-dim: rgba(194, 59, 46, 0.1);
+  --focus-ring: #101012;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #f5f4ef;
+    --bg-raised: #ffffff;
+    --fg: #101012;
+    --fg-muted: #63615c;
+    --hairline: rgba(16, 16, 18, 0.12);
+    --signal-drop: #4d8f00;
+    --signal-drop-dim: rgba(77, 143, 0, 0.1);
+    --signal-rise: #c23b2e;
+    --signal-rise-dim: rgba(194, 59, 46, 0.1);
+    --focus-ring: #101012;
+  }
+}

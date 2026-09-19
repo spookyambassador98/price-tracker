@@ -1,0 +1,80 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+enum ProductStatus {
+  ACTIVE
+  PAUSED
+  ERROR
+}
+
+model Product {
+  id             String        @id @default(cuid())
+  url            String        @unique
+  domain         String
+  title          String?
+  imageUrl       String?
+  currency       String        @default("RUB")
+  currentPrice   Float?
+  lowestPrice    Float?
+  targetPrice    Float?
+  status         ProductStatus @default(ACTIVE)
+  lastCheckedAt  DateTime?
+  lastError      String?
+  notifyEmail    String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  priceHistory   PriceHistory[]
+  notifications  NotificationLog[]
+
+  @@index([status])
+}
+
+model PriceHistory {
+  id         String   @id @default(cuid())
+  productId  String
+  price      Float
+  currency   String
+  inStock    Boolean  @default(true)
+  scrapedAt  DateTime @default(now())
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, scrapedAt])
+}
+
+enum NotificationChannel {
+  EMAIL
+  WEB_PUSH
+}
+
+model NotificationLog {
+  id         String              @id @default(cuid())
+  productId  String
+  channel    NotificationChannel
+  price      Float
+  targetPrice Float?
+  sentAt     DateTime            @default(now())
+  success    Boolean             @default(true)
+  error      String?
+
+  product    Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, sentAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,19 @@
+{
+  "name": "price-tracker",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace price-tracker-server",
+    "dev:client": "npm run dev --workspace price-tracker-client",
+    "build": "npm run prisma:generate --workspace price-tracker-server && npm run build --workspace price-tracker-server && npm run build --workspace price-tracker-client",
+    "start": "npm run start --workspace price-tracker-server",
+    "vercel-build": "npm run prisma:generate --workspace price-tracker-server && npm run prisma:deploy --workspace price-tracker-server && npm run build --workspace price-tracker-server && npm run build --workspace price-tracker-client"
+  }
+}
