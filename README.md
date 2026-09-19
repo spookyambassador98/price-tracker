@@ -43,7 +43,22 @@ npm run dev                # http://localhost:4000
 ```
 
 Локально backend сам поднимет cron (по умолчанию — каждый час, `SCRAPE_CRON` в `.env`).
-В проде часовую проверку дергает GitHub Action (`/.github/workflows/hourly-scrape.yml`).
+
+### Прод: hourly scheduler
+
+На Vercel Hobby hourly cron недоступен, поэтому в проде проверку дергает **GitHub Action**
+(`.github/workflows/hourly-scrape.yml`) — раз в час POST на `/api/scrape/run-now`.
+
+Секреты репозитория (Settings → Secrets → Actions):
+
+- `APP_URL` — `https://price-tracker-psi-red.vercel.app`
+- `CRON_SECRET` — тот же Bearer-токен, что в Vercel env `CRON_SECRET`
+
+Ручной прогон: Actions → **Hourly price check** → **Run workflow**.
+
+Альтернатива без GitHub: [cron-job.org](https://cron-job.org) — POST каждый час на
+`https://price-tracker-psi-red.vercel.app/api/scrape/run-now` с заголовком
+`Authorization: Bearer <CRON_SECRET>`.
 
 ### 3. Frontend
 

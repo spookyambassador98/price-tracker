@@ -6,9 +6,8 @@ dist/
 .DS_Store
 *.tsbuildinfo
 
-# Token cannot push workflow files; Vercel Cron covers hourly scrape.
-.github/workflows/
-
-
 server/generated/
 client/dist/
+
+.vercel
+.env*
