@@ -39,6 +39,28 @@ git push origin master
 
 ---
 
+## Вариант C — Windows Task Scheduler (уже включено на RJ)
+
+На этой машине зарегистрирована задача **`PriceTrackerHourlyScrape`** — раз в час дергает прод,
+пока комп включён.
+
+```powershell
+# Проверить статус
+schtasks /Query /TN PriceTrackerHourlyScrape /FO LIST
+
+# Ручной прогон
+powershell -File scripts/trigger-scrape.ps1
+
+# Переустановить
+powershell -File scripts/install-hourly-task.ps1
+```
+
+Секрет лежит локально в `scripts/.cron-secret.local` (в git не попадает).
+
+Для 24/7 без привязки к ПК — GitHub Action или cron-job.org (варианты A/B).
+
+---
+
 ## Ручной ping (отладка)
 
 ```bash
