@@ -44,9 +44,9 @@ export default function App() {
   async function handleEnablePush() {
     const result = await enablePushNotifications();
     setPushState(result);
-    if (result === "granted") pushToast("Push-уведомления включены");
-    if (result === "denied") pushToast("Доступ к уведомлениям запрещён в браузере", "error");
-    if (result === "unsupported") pushToast("Браузер не поддерживает Web Push", "error");
+    if (result === "granted") pushToast("Push notifications enabled");
+    if (result === "denied") pushToast("Notifications are blocked in this browser", "error");
+    if (result === "unsupported") pushToast("This browser does not support Web Push", "error");
   }
 
   return (
@@ -57,12 +57,12 @@ export default function App() {
         <div className="shell topbar">
           <Link to="/" className="wordmark">
             <span className="wordmark__dot" />
-            Ценовой радар
+            Price Radar
           </Link>
           <div className="topbar__actions">
             {isPushSupported() && pushState !== "granted" && (
               <button className="btn" onClick={handleEnablePush}>
-                <span className="label">Включить push</span>
+                <span className="label">Enable push</span>
               </button>
             )}
           </div>
@@ -79,11 +79,11 @@ export default function App() {
       <footer className="site-footer shell">
         <hr className="hairline" />
         <h2 className="footer-wordmark" aria-hidden>
-          <span>Радар</span>
+          <span>Radar</span>
         </h2>
         <div className="footer-meta">
-          <span>Проверка цен раз в час · Playwright + Prisma + PostgreSQL</span>
-          <span>Email + Web Push уведомления</span>
+          <span>Hourly price checks · Playwright + Prisma + PostgreSQL</span>
+          <span>Email + Web Push alerts</span>
         </div>
       </footer>
 

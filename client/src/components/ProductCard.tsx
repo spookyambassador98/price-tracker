@@ -6,9 +6,9 @@ import { Sparkline } from "./Sparkline";
 import { prefersReducedMotion } from "../lib/motion/lenis";
 
 const STATUS_LABEL: Record<Product["status"], string> = {
-  ACTIVE: "Отслеживается",
-  PAUSED: "На паузе",
-  ERROR: "Ошибка скрапинга",
+  ACTIVE: "Watching",
+  PAUSED: "Paused",
+  ERROR: "Scrape error",
 };
 
 /** Reveals the card once it scrolls into view, and drives the radial hover glow via CSS custom properties. */
@@ -79,7 +79,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
         )}
         {delta != null && delta !== 0 && (
           <span className={`price-delta ${delta < 0 ? "drop" : "rise"}`}>
-            {delta < 0 ? "↓" : "↑"} {Math.abs(delta).toLocaleString("ru-RU")}
+            {delta < 0 ? "↓" : "↑"} {Math.abs(delta).toLocaleString("en-US")}
           </span>
         )}
       </div>
@@ -87,8 +87,8 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
       <Sparkline points={history} />
 
       <div className="product-card__meta">
-        <span>{product.targetPrice ? `Порог: ${product.targetPrice.toLocaleString("ru-RU")}` : "Порог не задан"}</span>
-        <span>{product.lastCheckedAt ? new Date(product.lastCheckedAt).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "ещё не проверялся"}</span>
+        <span>{product.targetPrice ? `Floor: ${product.targetPrice.toLocaleString("en-US")}` : "No floor set"}</span>
+        <span>{product.lastCheckedAt ? new Date(product.lastCheckedAt).toLocaleString("en-US", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "not checked yet"}</span>
       </div>
     </Link>
   );

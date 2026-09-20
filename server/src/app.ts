@@ -67,7 +67,7 @@ export function createApp() {
 
   const runNow: express.RequestHandler = async (req, res, next) => {
     if (!isCronAuthorized(req)) {
-      res.status(401).json({ error: "Нет доступа к запуску проверки" });
+      res.status(401).json({ error: "Not authorized to run a scrape" });
       return;
     }
     try {
@@ -83,7 +83,7 @@ export function createApp() {
 
   app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     console.error("[http] unhandled error:", err);
-    res.status(500).json({ error: "Внутренняя ошибка сервера" });
+    res.status(500).json({ error: "Internal server error" });
   });
 
   return app;

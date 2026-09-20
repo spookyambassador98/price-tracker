@@ -33,7 +33,7 @@ function ensureVapid(): boolean {
 
 function formatMoney(price: number, currency: string): string {
   try {
-    return new Intl.NumberFormat("ru-RU", { style: "currency", currency, maximumFractionDigits: 0 }).format(
+    return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(
       price
     );
   } catch {
@@ -58,14 +58,14 @@ export async function sendPriceDropAlert(product: Product, newPrice: number): Pr
       await getTransporter().sendMail({
         from: process.env.MAIL_FROM ?? "Price Tracker <alerts@example.com>",
         to: product.notifyEmail,
-        subject: `Цена снизилась: ${title} — ${priceLabel}`,
+        subject: `Price dropped: ${title} — ${priceLabel}`,
         html: `
           <div style="font-family: sans-serif; max-width: 480px;">
             <h2 style="margin-bottom: 4px;">${escapeHtml(title)}</h2>
-            <p style="color:#555;">Новая цена <strong>${priceLabel}</strong>${
-          targetLabel ? ` — ниже вашего порога ${targetLabel}` : ""
+            <p style="color:#555;">New price <strong>${priceLabel}</strong>${
+          targetLabel ? ` — below your floor of ${targetLabel}` : ""
         }.</p>
-            <p><a href="${product.url}" style="color:#0a7;">Открыть товар →</a></p>
+            <p><a href="${product.url}" style="color:#0a7;">Open product →</a></p>
           </div>
         `,
       });
@@ -86,8 +86,8 @@ export async function sendPriceDropAlert(product: Product, newPrice: number): Pr
   if (ensureVapid()) {
     const subscriptions = await prisma.pushSubscription.findMany();
     const payload = JSON.stringify({
-      title: `Цена снизилась: ${title}`,
-      body: `Новая цена ${priceLabel}${targetLabel ? `, ниже порога ${targetLabel}` : ""}`,
+      title: `Price dropped: ${title}`,
+      body: `New price ${priceLabel}${targetLabel ? `, below floor ${targetLabel}` : ""}`,
       url: product.url,
       productId: product.id,
     });

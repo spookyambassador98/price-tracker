@@ -21,7 +21,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     } catch {
       // no JSON body
     }
-    throw new ApiError(body?.error ?? `Ошибка запроса (${res.status})`, res.status, body?.details);
+    throw new ApiError(body?.error ?? `Request failed (${res.status})`, res.status, body?.details);
   }
 
   if (res.status === 204) return undefined as T;

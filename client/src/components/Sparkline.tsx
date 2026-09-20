@@ -24,7 +24,7 @@ export function Sparkline({ points, positiveIsGood = true }: Props) {
   const stroke = trendUp ? (good ? "var(--signal-drop)" : "var(--signal-rise)") : good ? "var(--signal-drop)" : "var(--signal-rise)";
 
   return (
-    <svg className="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" role="img" aria-label="История цены">
+    <svg className="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" role="img" aria-label="Price history">
       <polyline points={coords.join(" ")} fill="none" stroke={stroke} strokeWidth="2" vectorEffect="non-scaling-stroke" />
     </svg>
   );

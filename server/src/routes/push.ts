@@ -8,7 +8,7 @@ export const pushRouter = Router();
 pushRouter.get("/vapid-public-key", (_req, res) => {
   const key = process.env.VAPID_PUBLIC_KEY;
   if (!key) {
-    res.status(503).json({ error: "Web Push не настроен на сервере" });
+    res.status(503).json({ error: "Web Push is not configured on the server" });
     return;
   }
   res.json({ publicKey: key });
@@ -24,7 +24,7 @@ pushRouter.post(
   asyncHandler(async (req, res) => {
     const parsed = subscribeSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({ error: "Некорректная подписка", details: parsed.error.flatten() });
+      res.status(400).json({ error: "Invalid subscription", details: parsed.error.flatten() });
       return;
     }
     const { endpoint, keys } = parsed.data;
@@ -46,7 +46,7 @@ pushRouter.post(
   asyncHandler(async (req, res) => {
     const parsed = unsubscribeSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({ error: "Некорректный запрос" });
+      res.status(400).json({ error: "Invalid request" });
       return;
     }
 

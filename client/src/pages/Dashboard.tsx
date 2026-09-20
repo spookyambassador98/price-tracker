@@ -14,7 +14,7 @@ export function Dashboard({ onToast }: { onToast: (text: string, variant?: "info
     api
       .listProducts()
       .then((data) => !cancelled && setProducts(data))
-      .catch((err) => onToast(err instanceof ApiError ? err.message : "Не удалось загрузить товары", "error"))
+      .catch((err) => onToast(err instanceof ApiError ? err.message : "Could not load products", "error"))
       .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;
@@ -24,7 +24,7 @@ export function Dashboard({ onToast }: { onToast: (text: string, variant?: "info
 
   function handleAdded(product: Product) {
     setProducts((prev) => [product, ...prev]);
-    onToast(`Добавлено: ${product.title ?? product.url}`);
+    onToast(`Added: ${product.title ?? product.url}`);
     window.dispatchEvent(new Event("radar:products-changed"));
   }
 
@@ -35,34 +35,34 @@ export function Dashboard({ onToast }: { onToast: (text: string, variant?: "info
           as="h1"
           className="hero__headline"
           lines={[
-            <>Радар</>,
+            <>Radar</>,
             <>
-              следит <em>за ценой</em>
+              watches <em>the price</em>
             </>,
           ]}
         />
         <p className="hero__sub">
-          Вставьте ссылку на товар — раз в час мы проверяем цену на странице и сигналим,
-          как только она падает ниже вашего порога.
+          Paste a product URL. We scrape the live price every hour and ping you
+          the moment it drops below your floor.
         </p>
       </section>
 
       <section className="section shell">
         <div className="section__label">
-          <span className="index">01</span> Добавить товар
+          <span className="index">01</span> Add a product
         </div>
         <AddProductForm onAdded={handleAdded} onError={(m) => onToast(m, "error")} />
       </section>
 
       <section className="section shell">
         <div className="section__label">
-          <span className="index">02</span> Отслеживаемые товары ({products.length})
+          <span className="index">02</span> Tracked products ({products.length})
         </div>
 
         {loading ? (
-          <div className="empty-state">Загружаем…</div>
+          <div className="empty-state">Loading…</div>
         ) : products.length === 0 ? (
-          <div className="empty-state">Пока ничего не отслеживается — добавьте первую ссылку выше.</div>
+          <div className="empty-state">Nothing on the radar yet — paste a first URL above.</div>
         ) : (
           <div className="product-grid">
             {products.map((p, i) => (

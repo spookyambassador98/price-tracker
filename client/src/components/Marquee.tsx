@@ -5,7 +5,7 @@ import { prefersReducedMotion } from "../lib/motion/lenis";
 
 function formatMoney(price: number, currency: string): string {
   try {
-    return new Intl.NumberFormat("ru-RU", { style: "currency", currency, maximumFractionDigits: 0 }).format(price);
+    return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(price);
   } catch {
     return `${price} ${currency}`;
   }

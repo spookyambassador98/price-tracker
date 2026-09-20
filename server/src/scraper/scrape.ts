@@ -41,7 +41,7 @@ function emptyResult(error: string): ScrapeResult {
 
 function toResult(extracted: ExtractedProduct, error: string | null = null): ScrapeResult {
   if (extracted.price == null) {
-    return { ...extracted, ok: false, error: error ?? "Не удалось найти цену на странице" };
+    return { ...extracted, ok: false, error: error ?? "Could not find a price on the page" };
   }
   return { ...extracted, ok: true, error: null };
 }
@@ -60,7 +60,7 @@ async function scrapeWithFetch(url: string): Promise<ScrapeResult> {
       },
     });
     if (!res.ok) {
-      return emptyResult(`HTTP ${res.status} при загрузке страницы`);
+      return emptyResult(`HTTP ${res.status} while loading the page`);
     }
     const html = await res.text();
     return toResult(extractFromHtml(html, url));

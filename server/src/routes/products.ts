@@ -53,7 +53,7 @@ productsRouter.get(
       include: productDetailInclude,
     });
     if (!product) {
-      res.status(404).json({ error: "Товар не найден" });
+      res.status(404).json({ error: "Product not found" });
       return;
     }
     res.json(product);
@@ -65,14 +65,14 @@ productsRouter.post(
   asyncHandler(async (req, res) => {
     const parsed = createProductSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({ error: "Некорректные данные", details: parsed.error.flatten() });
+      res.status(400).json({ error: "Invalid data", details: parsed.error.flatten() });
       return;
     }
     const { url, targetPrice, notifyEmail } = parsed.data;
 
     const existing = await prisma.product.findUnique({ where: { url } });
     if (existing) {
-      res.status(409).json({ error: "Этот товар уже отслеживается", product: existing });
+      res.status(409).json({ error: "This product is already tracked", product: existing });
       return;
     }
 
@@ -119,14 +119,14 @@ productsRouter.patch(
   asyncHandler(async (req, res) => {
     const parsed = updateProductSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({ error: "Некорректные данные", details: parsed.error.flatten() });
+      res.status(400).json({ error: "Invalid data", details: parsed.error.flatten() });
       return;
     }
     try {
       const product = await prisma.product.update({ where: { id: req.params.id }, data: parsed.data });
       res.json(product);
     } catch {
-      res.status(404).json({ error: "Товар не найден" });
+      res.status(404).json({ error: "Product not found" });
     }
   })
 );
@@ -138,7 +138,7 @@ productsRouter.delete(
       await prisma.product.delete({ where: { id: req.params.id } });
       res.status(204).end();
     } catch {
-      res.status(404).json({ error: "Товар не найден" });
+      res.status(404).json({ error: "Product not found" });
     }
   })
 );
@@ -148,7 +148,7 @@ productsRouter.post(
   asyncHandler(async (req, res) => {
     const product = await prisma.product.findUnique({ where: { id: req.params.id } });
     if (!product) {
-      res.status(404).json({ error: "Товар не найден" });
+      res.status(404).json({ error: "Product not found" });
       return;
     }
 

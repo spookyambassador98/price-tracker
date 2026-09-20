@@ -29,7 +29,7 @@ export function AddProductForm({ onAdded, onError }: Props) {
       setTargetPrice("");
       setEmail("");
     } catch (err) {
-      const message = err instanceof ApiError ? err.message : "Не удалось добавить товар";
+      const message = err instanceof ApiError ? err.message : "Could not add the product";
       setError(message);
       onError(message);
     } finally {
@@ -40,7 +40,7 @@ export function AddProductForm({ onAdded, onError }: Props) {
   return (
     <form className="add-form" onSubmit={handleSubmit}>
       <div className="field">
-        <label htmlFor="url">Ссылка на товар</label>
+        <label htmlFor="url">Product URL</label>
         <input
           id="url"
           type="url"
@@ -51,7 +51,7 @@ export function AddProductForm({ onAdded, onError }: Props) {
         />
       </div>
       <div className="field">
-        <label htmlFor="target">Порог цены</label>
+        <label htmlFor="target">Price floor</label>
         <input
           id="target"
           type="number"
@@ -62,7 +62,7 @@ export function AddProductForm({ onAdded, onError }: Props) {
         />
       </div>
       <div className="field">
-        <label htmlFor="email">Email для уведомлений</label>
+        <label htmlFor="email">Notify email</label>
         <input
           id="email"
           type="email"
@@ -72,7 +72,7 @@ export function AddProductForm({ onAdded, onError }: Props) {
         />
       </div>
       <button className="btn btn--primary" type="submit" disabled={submitting}>
-        {submitting ? "Добавляем…" : "Отслеживать"}
+        {submitting ? "Adding…" : "Watch"}
       </button>
       {error && <div className="form-error">{error}</div>}
     </form>

@@ -7,7 +7,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip,
 
 export function PriceChart({ history, currency, targetPrice }: { history: PriceHistoryPoint[]; currency: string; targetPrice: number | null }) {
   const labels = history.map((h) =>
-    new Date(h.scrapedAt).toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" })
+    new Date(h.scrapedAt).toLocaleDateString("en-US", { day: "2-digit", month: "short" })
   );
   const values = history.map((h) => h.price);
 
@@ -25,7 +25,7 @@ export function PriceChart({ history, currency, targetPrice }: { history: PriceH
       tooltip: {
         callbacks: {
           label: (ctx) =>
-            new Intl.NumberFormat("ru-RU", { style: "currency", currency, maximumFractionDigits: 0 }).format(
+            new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(
               ctx.parsed.y ?? 0
             ),
         },
@@ -41,7 +41,7 @@ export function PriceChart({ history, currency, targetPrice }: { history: PriceH
     labels,
     datasets: [
       {
-        label: "Цена",
+        label: "Price",
         data: values,
         borderColor: signal,
         backgroundColor: (ctx) => {
@@ -62,7 +62,7 @@ export function PriceChart({ history, currency, targetPrice }: { history: PriceH
       ...(targetPrice != null
         ? [
             {
-              label: "Порог",
+              label: "Floor",
               data: labels.map(() => targetPrice),
               borderColor: "rgba(242, 240, 234, 0.45)",
               backgroundColor: "transparent",

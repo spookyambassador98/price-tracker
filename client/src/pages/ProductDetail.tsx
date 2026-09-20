@@ -6,9 +6,9 @@ import { Counter } from "../components/Counter";
 import { PriceChart } from "../components/PriceChart";
 
 const STATUS_LABEL: Record<Product["status"], string> = {
-  ACTIVE: "Отслеживается",
-  PAUSED: "На паузе",
-  ERROR: "Ошибка скрапинга",
+  ACTIVE: "Watching",
+  PAUSED: "Paused",
+  ERROR: "Scrape error",
 };
 
 export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "info" | "error") => void }) {
@@ -30,7 +30,7 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
         setTargetInput(p.targetPrice != null ? String(p.targetPrice) : "");
         setEmailInput(p.notifyEmail ?? "");
       })
-      .catch((err) => onToast(err instanceof ApiError ? err.message : "Товар не найден", "error"))
+      .catch((err) => onToast(err instanceof ApiError ? err.message : "Product not found", "error"))
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -45,10 +45,10 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
     try {
       const result = await api.checkNow(product.id);
       setProduct(result.product);
-      onToast(result.alertSent ? "Цена ниже порога — уведомление отправлено" : "Цена обновлена");
+      onToast(result.alertSent ? "Price is below the floor — notification sent" : "Price updated");
       window.dispatchEvent(new Event("radar:products-changed"));
     } catch (err) {
-      onToast(err instanceof ApiError ? err.message : "Не удалось проверить цену", "error");
+      onToast(err instanceof ApiError ? err.message : "Could not check the price", "error");
     } finally {
       setChecking(false);
     }
@@ -63,9 +63,9 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
         notifyEmail: emailInput || null,
       });
       setProduct(updated);
-      onToast("Настройки сохранены");
+      onToast("Settings saved");
     } catch (err) {
-      onToast(err instanceof ApiError ? err.message : "Не удалось сохранить", "error");
+      onToast(err instanceof ApiError ? err.message : "Could not save", "error");
     }
   }
 
@@ -77,7 +77,7 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
       });
       setProduct(updated);
     } catch (err) {
-      onToast(err instanceof ApiError ? err.message : "Не удалось изменить статус", "error");
+      onToast(err instanceof ApiError ? err.message : "Could not change status", "error");
     }
   }
 
@@ -89,15 +89,15 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
     }
     try {
       await api.deleteProduct(product.id);
-      onToast("Товар удалён");
+      onToast("Product removed");
       navigate("/");
     } catch (err) {
-      onToast(err instanceof ApiError ? err.message : "Не удалось удалить", "error");
+      onToast(err instanceof ApiError ? err.message : "Could not delete", "error");
     }
   }
 
-  if (loading) return <div className="shell section empty-state">Загружаем…</div>;
-  if (!product) return <div className="shell section empty-state">Товар не найден</div>;
+  if (loading) return <div className="shell section empty-state">Loading…</div>;
+  if (!product) return <div className="shell section empty-state">Product not found</div>;
 
   const history = product.priceHistory ?? [];
   const prev = history.length >= 2 ? history[history.length - 2].price : null;
@@ -106,7 +106,7 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
   return (
     <div className="shell section">
       <button className="btn btn--ghost" onClick={() => navigate("/")} style={{ marginBottom: "var(--space-md)" }}>
-        ← Ко всем товарам
+        ← All products
       </button>
 
       <div className="detail-header">
@@ -116,7 +116,7 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
             {product.title ?? product.url}
           </h1>
           <a href={product.url} target="_blank" rel="noreferrer" className="btn btn--ghost" style={{ padding: 0 }}>
-            Открыть на сайте ↗
+            Open on site ↗
           </a>
         </div>
 
@@ -128,7 +128,7 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
           )}
           {delta != null && delta !== 0 && (
             <div className={`price-delta ${delta < 0 ? "drop" : "rise"}`} style={{ marginTop: "0.4em", display: "inline-flex" }}>
-              {delta < 0 ? "↓" : "↑"} {Math.abs(delta).toLocaleString("ru-RU")}
+              {delta < 0 ? "↓" : "↑"} {Math.abs(delta).toLocaleString("en-US")}
             </div>
           )}
         </div>
@@ -136,23 +136,23 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
 
       <div className="detail-grid">
         <div className="stat">
-          <div className="stat__label">Статус</div>
+          <div className="stat__label">Status</div>
           <div className="stat__value">{STATUS_LABEL[product.status]}</div>
         </div>
         <div className="stat">
-          <div className="stat__label">Минимум за всё время</div>
-          <div className="stat__value">{product.lowestPrice?.toLocaleString("ru-RU") ?? "—"}</div>
+          <div className="stat__label">All-time low</div>
+          <div className="stat__value">{product.lowestPrice?.toLocaleString("en-US") ?? "—"}</div>
         </div>
         <div className="stat">
-          <div className="stat__label">Последняя проверка</div>
+          <div className="stat__label">Last check</div>
           <div className="stat__value">
-            {product.lastCheckedAt ? new Date(product.lastCheckedAt).toLocaleString("ru-RU") : "—"}
+            {product.lastCheckedAt ? new Date(product.lastCheckedAt).toLocaleString("en-US") : "—"}
           </div>
         </div>
         {product.lastError && (
           <div className="stat">
             <div className="stat__label" style={{ color: "var(--signal-rise)" }}>
-              Ошибка
+              Error
             </div>
             <div className="stat__value" style={{ fontSize: "0.9rem" }}>
               {product.lastError}
@@ -165,62 +165,62 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
         {history.length >= 2 ? (
           <PriceChart history={history} currency={product.currency} targetPrice={product.targetPrice} />
         ) : (
-          <div className="empty-state">Пока недостаточно данных для графика — загляните после следующей проверки.</div>
+          <div className="empty-state">Not enough ticks for a chart yet — check back after the next scrape.</div>
         )}
       </div>
 
       <div style={{ display: "flex", gap: "var(--space-xs)", marginTop: "var(--space-md)", flexWrap: "wrap" }}>
         <button className="btn btn--primary" onClick={handleCheckNow} disabled={checking}>
-          {checking ? "Проверяем…" : "Проверить сейчас"}
+          {checking ? "Checking…" : "Check now"}
         </button>
         <button className="btn" onClick={handleTogglePause}>
-          {product.status === "PAUSED" ? "Возобновить" : "Поставить на паузу"}
+          {product.status === "PAUSED" ? "Resume" : "Pause"}
         </button>
         <button className="btn" onClick={handleDelete} style={confirmingDelete ? { borderColor: "var(--signal-rise)", color: "var(--signal-rise)" } : undefined}>
-          {confirmingDelete ? "Точно удалить?" : "Удалить"}
+          {confirmingDelete ? "Delete for sure?" : "Delete"}
         </button>
       </div>
 
       <div className="section__label" style={{ marginTop: "var(--space-lg)" }}>
-        <span className="index">03</span> Настройки уведомлений
+        <span className="index">03</span> Notification settings
       </div>
       <form className="add-form" onSubmit={handleSaveSettings} style={{ gridTemplateColumns: "1fr 1fr auto" }}>
         <div className="field">
-          <label htmlFor="target">Порог цены</label>
+          <label htmlFor="target">Price floor</label>
           <input id="target" type="number" min={0} value={targetInput} onChange={(e) => setTargetInput(e.target.value)} />
         </div>
         <div className="field">
-          <label htmlFor="email">Email для уведомлений</label>
+          <label htmlFor="email">Notify email</label>
           <input id="email" type="email" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} />
         </div>
         <button className="btn" type="submit">
-          Сохранить
+          Save
         </button>
       </form>
 
       {(product.notifications?.length ?? 0) > 0 && (
         <>
           <div className="section__label" style={{ marginTop: "var(--space-lg)" }}>
-            <span className="index">04</span> Уведомления
+            <span className="index">04</span> Notifications
           </div>
           <table className="history-table">
             <thead>
               <tr>
-                <th>Когда</th>
-                <th>Канал</th>
-                <th>Цена</th>
-                <th>Статус</th>
+                <th>When</th>
+                <th>Channel</th>
+                <th>Price</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {product.notifications!.map((n) => (
                 <tr key={n.id}>
-                  <td>{new Date(n.sentAt).toLocaleString("ru-RU")}</td>
+                  <td>{new Date(n.sentAt).toLocaleString("en-US")}</td>
                   <td>{n.channel === "EMAIL" ? "Email" : "Web Push"}</td>
                   <td>
-                    {n.price.toLocaleString("ru-RU")} {product.currency}
+                    {n.price.toLocaleString("en-US")} {product.currency}
                   </td>
-                  <td>{n.success ? "отправлено" : n.error ?? "ошибка"}</td>
+                  <td>{n.success ? "sent" : n.error ?? "error"}</td>
                 </tr>
               ))}
             </tbody>
@@ -231,22 +231,22 @@ export function ProductDetail({ onToast }: { onToast: (text: string, variant?: "
       {history.length > 0 && (
         <>
           <div className="section__label" style={{ marginTop: "var(--space-lg)" }}>
-            <span className="index">{(product.notifications?.length ?? 0) > 0 ? "05" : "04"}</span> История проверок
+            <span className="index">{(product.notifications?.length ?? 0) > 0 ? "05" : "04"}</span> Check history
           </div>
           <table className="history-table">
             <thead>
               <tr>
-                <th>Дата</th>
-                <th>Цена</th>
-                <th>В наличии</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>In stock</th>
               </tr>
             </thead>
             <tbody>
               {[...history].reverse().map((h) => (
                 <tr key={h.id}>
-                  <td>{new Date(h.scrapedAt).toLocaleString("ru-RU")}</td>
-                  <td>{h.price.toLocaleString("ru-RU")} {h.currency}</td>
-                  <td>{h.inStock ? "да" : "нет"}</td>
+                  <td>{new Date(h.scrapedAt).toLocaleString("en-US")}</td>
+                  <td>{h.price.toLocaleString("en-US")} {h.currency}</td>
+                  <td>{h.inStock ? "yes" : "no"}</td>
                 </tr>
               ))}
             </tbody>

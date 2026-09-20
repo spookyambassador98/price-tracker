@@ -2,7 +2,7 @@
 // and focuses/opens the product page on click.
 
 self.addEventListener("push", (event) => {
-  let data = { title: "Цена изменилась", body: "", url: "/" };
+  let data = { title: "Price changed", body: "", url: "/" };
   try {
     data = event.data ? event.data.json() : data;
   } catch {
